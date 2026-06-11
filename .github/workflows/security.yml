@@ -24,7 +24,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-audit
+        run: composer install --prefer-dist --no-interaction
 
       - name: Audit composer dependencies
         run: composer audit

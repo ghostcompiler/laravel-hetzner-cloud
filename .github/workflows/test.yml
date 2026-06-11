@@ -96,10 +96,13 @@ jobs:
         run: vendor/bin/phpunit
 
       - name: Run PHPStan analysis
+        if: matrix.php == '8.2' && matrix.laravel == '10.*'
         run: vendor/bin/phpstan analyse
 
       - name: Run Psalm analysis
+        if: matrix.php == '8.2' && matrix.laravel == '10.*'
         run: vendor/bin/psalm --no-cache
 
       - name: Check Pint code style
+        if: matrix.php == '8.2' && matrix.laravel == '10.*'
         run: vendor/bin/pint --test

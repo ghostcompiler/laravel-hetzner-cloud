@@ -1,10 +1,20 @@
-# Laravel Hetzner Cloud SDK
+<p align="center">
+  <img src="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780666791/logo_mqnqn4.png" alt="Cloudflare Pro" width="180">
+</p>
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ghostcompiler/laravel-hetzner-cloud.svg?style=flat-square)](https://packagist.org/packages/ghostcompiler/laravel-hetzner-cloud)
-[![Total Downloads](https://img.shields.io/packagist/dt/ghostcompiler/laravel-hetzner-cloud.svg?style=flat-square)](https://packagist.org/packages/ghostcompiler/laravel-hetzner-cloud)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/ghostcompiler/laravel-hetzner-cloud/test.yml?branch=master&label=tests&style=flat-square)](https://github.com/ghostcompiler/laravel-hetzner-cloud/actions)
+<h1 align="center">Cloudflare Pro for Plesk</h1>
 
-A production-ready Laravel SDK providing 100% complete coverage of the Hetzner Cloud API, fully compatible with PHP 7.4 through PHP 8.5, and supported on Laravel 8 through Laravel 13.
+<p align="center">
+  Sync Plesk DNS records with Cloudflare using token-scoped access, per-user settings, API logs, and background sync jobs.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Plesk-Extension-52BBE6?style=for-the-badge&logo=plesk&logoColor=white" alt="Plesk Extension">
+  <img src="https://img.shields.io/badge/Cloudflare-DNS%20Sync-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare DNS Sync">
+  <img src="https://img.shields.io/badge/React-JSX-61DAFB?style=for-the-badge&logo=react&logoColor=000000" alt="React JSX">
+  <img src="https://img.shields.io/badge/PHP-Backend-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP Backend">
+  <img src="https://img.shields.io/badge/Built%20By-Ghost%20Compiler-0F172A?style=for-the-badge" alt="Ghost Compiler">
+</p>
 
 ---
 
@@ -212,3 +222,19 @@ Format code with Pint:
 ```bash
 vendor/bin/pint
 ```
+
+---
+
+## Development Environment
+
+Built using **ServBay**
+
+<p align="left">
+  <img src="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780667063/servbay_edc7jz.png" alt="ServBay" width="120">
+</p>
+
+- Mac M4 Tested
+- macOS Apple Silicon
+- Powered by ServBay
+
+---
