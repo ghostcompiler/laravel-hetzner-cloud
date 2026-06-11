@@ -1,0 +1,105 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        laravel: ['8.*', '9.*', '10.*', '11.*', '12.*', '13.*']
+        exclude:
+          # Laravel 8 constraints (PHP 7.3 - 8.1)
+          - laravel: '8.*'
+            php: '8.2'
+          - laravel: '8.*'
+            php: '8.3'
+          - laravel: '8.*'
+            php: '8.4'
+          - laravel: '8.*'
+            php: '8.5'
+
+          # Laravel 9 constraints (PHP 8.0 - 8.2)
+          - laravel: '9.*'
+            php: '7.4'
+          - laravel: '9.*'
+            php: '8.3'
+          - laravel: '9.*'
+            php: '8.4'
+          - laravel: '9.*'
+            php: '8.5'
+
+          # Laravel 10 constraints (PHP 8.1 - 8.3)
+          - laravel: '10.*'
+            php: '7.4'
+          - laravel: '10.*'
+            php: '8.0'
+          - laravel: '10.*'
+            php: '8.4'
+          - laravel: '10.*'
+            php: '8.5'
+
+          # Laravel 11 constraints (PHP 8.2 - 8.4)
+          - laravel: '11.*'
+            php: '7.4'
+          - laravel: '11.*'
+            php: '8.0'
+          - laravel: '11.*'
+            php: '8.1'
+          - laravel: '11.*'
+            php: '8.5'
+
+          # Laravel 12 constraints (PHP 8.2+)
+          - laravel: '12.*'
+            php: '7.4'
+          - laravel: '12.*'
+            php: '8.0'
+          - laravel: '12.*'
+            php: '8.1'
+
+          # Laravel 13 constraints (PHP 8.2+)
+          - laravel: '13.*'
+            php: '7.4'
+          - laravel: '13.*'
+            php: '8.0'
+          - laravel: '13.*'
+            php: '8.1'
+
+    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, libxml, mbstring
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
+          composer install --prefer-dist --no-interaction --ignore-platform-req=php
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit
+
+      - name: Run PHPStan analysis
+        run: vendor/bin/phpstan analyse
+
+      - name: Run Psalm analysis
+        run: vendor/bin/psalm --no-cache
+
+      - name: Check Pint code style
+        run: vendor/bin/pint --test

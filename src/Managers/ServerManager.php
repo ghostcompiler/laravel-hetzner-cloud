@@ -1,0 +1,346 @@
+<?php
+
+namespace Vendor\HetznerCloud\Managers;
+
+use Vendor\HetznerCloud\Collections\ActionCollection;
+use Vendor\HetznerCloud\Collections\ServerCollection;
+use Vendor\HetznerCloud\DTOs\Action;
+use Vendor\HetznerCloud\DTOs\PaginationMeta;
+use Vendor\HetznerCloud\DTOs\Server;
+use Vendor\HetznerCloud\Responses\PaginatedResponse;
+use Vendor\HetznerCloud\Responses\ServerCreateResponse;
+
+class ServerManager extends AbstractManager
+{
+    /**
+     * Get all servers.
+     *
+     * @return ServerCollection|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function all()
+    {
+        $response = $this->getRequest('servers', $this->buildQueryParams());
+
+        return $this->hydrate($response, function (array $data) {
+            $servers = array_map(fn (array $item) => Server::fromArray($item), $data['servers'] ?? []);
+            return new ServerCollection($servers);
+        });
+    }
+
+    /**
+     * Alias for all().
+     *
+     * @return ServerCollection|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function get()
+    {
+        return $this->all();
+    }
+
+    /**
+     * Paginate servers.
+     *
+     * @param int $perPage
+     * @param int $page
+     * @return PaginatedResponse|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function paginate(int $perPage = 25, int $page = 1)
+    {
+        $this->perPage($perPage)->page($page);
+        $response = $this->getRequest('servers', $this->buildQueryParams());
+
+        return $this->hydrate($response, function (array $data) {
+            $servers = array_map(fn (array $item) => Server::fromArray($item), $data['servers'] ?? []);
+            $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+            return new PaginatedResponse(new ServerCollection($servers), $meta);
+        });
+    }
+
+    /**
+     * Find a server by ID.
+     *
+     * @param int $id
+     * @return Server|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function find(int $id)
+    {
+        $response = $this->getRequest("servers/{$id}");
+
+        return $this->hydrate($response, function (array $data) {
+            return Server::fromArray($data['server'] ?? []);
+        });
+    }
+
+    /**
+     * Create a server.
+     *
+     * @param array $data
+     * @return ServerCreateResponse|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function create(array $data)
+    {
+        $response = $this->postRequest('servers', $data);
+
+        return $this->hydrate($response, function (array $data) {
+            return ServerCreateResponse::fromArray($data);
+        });
+    }
+
+    /**
+     * Update a server.
+     *
+     * @param int $id
+     * @param array $data
+     * @return Server|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function update(int $id, array $data)
+    {
+        $response = $this->putRequest("servers/{$id}", $data);
+
+        return $this->hydrate($response, function (array $data) {
+            return Server::fromArray($data['server'] ?? []);
+        });
+    }
+
+    /**
+     * Delete a server.
+     *
+     * @param int $id
+     * @return Action|null|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function delete(int $id)
+    {
+        $response = $this->deleteRequest("servers/{$id}");
+
+        return $this->hydrate($response, function (array $data) {
+            return isset($data['action']) ? Action::fromArray($data['action']) : null;
+        });
+    }
+
+    /**
+     * Get metrics for a server.
+     *
+     * @param int $id
+     * @param array $params
+     * @return array|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function metrics(int $id, array $params = [])
+    {
+        return $this->getRequest("servers/{$id}/metrics", $params);
+    }
+
+    /**
+     * Get action history for a server.
+     *
+     * @param int $id
+     * @return ActionCollection|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function actions(int $id)
+    {
+        $response = $this->getRequest("servers/{$id}/actions");
+
+        return $this->hydrate($response, function (array $data) {
+            $actions = array_map(fn (array $item) => Action::fromArray($item), $data['actions'] ?? []);
+            return new ActionCollection($actions);
+        });
+    }
+
+    /**
+     * Power on server.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function powerOn(int $id)
+    {
+        return $this->postAction($id, 'poweron');
+    }
+
+    /**
+     * Power off server.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function powerOff(int $id)
+    {
+        return $this->postAction($id, 'poweroff');
+    }
+
+    /**
+     * Shutdown server.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function shutdown(int $id)
+    {
+        return $this->postAction($id, 'shutdown');
+    }
+
+    /**
+     * Reboot server.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function reboot(int $id)
+    {
+        return $this->postAction($id, 'reboot');
+    }
+
+    /**
+     * Reset server power.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function reset(int $id)
+    {
+        return $this->postAction($id, 'reset');
+    }
+
+    /**
+     * Rebuild server from image.
+     *
+     * @param int $id
+     * @param string|int $image
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function rebuild(int $id, $image)
+    {
+        return $this->postAction($id, 'rebuild', ['image' => $image]);
+    }
+
+    /**
+     * Enable rescue mode.
+     *
+     * @param int $id
+     * @param array $params
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function enableRescue(int $id, array $params = [])
+    {
+        return $this->postAction($id, 'enable_rescue', $params);
+    }
+
+    /**
+     * Disable rescue mode.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function disableRescue(int $id)
+    {
+        return $this->postAction($id, 'disable_rescue');
+    }
+
+    /**
+     * Enable backups.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function enableBackup(int $id)
+    {
+        return $this->postAction($id, 'enable_backup');
+    }
+
+    /**
+     * Disable backups.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function disableBackup(int $id)
+    {
+        return $this->postAction($id, 'disable_backup');
+    }
+
+    /**
+     * Attach ISO image.
+     *
+     * @param int $id
+     * @param string|int $iso
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function attachIso(int $id, $iso)
+    {
+        return $this->postAction($id, 'attach_iso', ['iso' => $iso]);
+    }
+
+    /**
+     * Detach ISO image.
+     *
+     * @param int $id
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function detachIso(int $id)
+    {
+        return $this->postAction($id, 'detach_iso');
+    }
+
+    /**
+     * Attach to a network.
+     *
+     * @param int $id
+     * @param array|int $network
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function attachToNetwork(int $id, $network)
+    {
+        $params = is_array($network) ? $network : ['network' => (int) $network];
+        return $this->postAction($id, 'attach_to_network', $params);
+    }
+
+    /**
+     * Detach from a network.
+     *
+     * @param int $id
+     * @param array|int $network
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function detachFromNetwork(int $id, $network)
+    {
+        $params = is_array($network) ? $network : ['network' => (int) $network];
+        return $this->postAction($id, 'detach_from_network', $params);
+    }
+
+    /**
+     * Add server to a firewall.
+     *
+     * @param int $id
+     * @param array|int $firewall
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function addToFirewall(int $id, $firewall)
+    {
+        $params = is_array($firewall) ? $firewall : ['firewall' => (int) $firewall];
+        return $this->postAction($id, 'add_to_firewall', $params);
+    }
+
+    /**
+     * Remove server from a firewall.
+     *
+     * @param int $id
+     * @param array|int $firewall
+     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     */
+    public function removeFromFirewall(int $id, $firewall)
+    {
+        $params = is_array($firewall) ? $firewall : ['firewall' => (int) $firewall];
+        return $this->postAction($id, 'remove_from_firewall', $params);
+    }
+
+    /**
+     * Post a server action.
+     */
+    private function postAction(int $serverId, string $actionName, array $params = [])
+    {
+        $response = $this->postRequest("servers/{$serverId}/actions/{$actionName}", $params);
+
+        return $this->hydrate($response, function (array $data) {
+            return Action::fromArray($data['action'] ?? []);
+        });
+    }
+}

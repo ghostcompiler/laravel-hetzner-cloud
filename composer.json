@@ -1,0 +1,54 @@
+{
+    "name": "ghostcompiler/laravel-hetzner-cloud",
+    "description": "Production-ready Laravel SDK for the Hetzner Cloud API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ghost Compiler",
+            "email": "info@ghostcompiler.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3 || ^8.4 || ^8.5",
+        "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "illuminate/contracts": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+        "phpunit/phpunit": "^9.5 || ^10.0",
+        "phpstan/phpstan": "^1.10",
+        "vimeo/psalm": "^5.15",
+        "laravel/pint": "^1.13",
+        "rector/rector": "^0.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vendor\\HetznerCloud\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Vendor\\HetznerCloud\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Vendor\\HetznerCloud\\Providers\\HetznerCloudServiceProvider"
+            ],
+            "aliases": {
+                "Hetzner": "Vendor\\HetznerCloud\\Facades\\Hetzner"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        },
+        "audit": {
+            "block-insecure": false
+        }
+    }
+}

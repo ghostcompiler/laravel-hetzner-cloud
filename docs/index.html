@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laravel Hetzner Cloud SDK v1.0.0 Documentation</title>
+  <meta name="description" content="Complete documentation and interactive API testing client for the laravel-hetzner-cloud SDK package. Deploy servers, volumes, networks, firewalls, and more.">
+  <meta name="author" content="Ghost Compiler">
+  <meta name="robots" content="index,follow">
+  <meta name="theme-color" content="#22c55e">
+  <meta name="application-name" content="Hetzner Cloud SDK Documentation">
+  <link rel="canonical" href="https://ghostcompiler.github.io/laravel-hetzner-cloud/">
+  <link rel="icon" href="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780666791/logo_mqnqn4.png">
+  
+  <!-- Google Fonts Connection -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Laravel Hetzner Cloud SDK v1.0.0 Documentation",
+    "about": "Laravel SDK for Hetzner Cloud API",
+    "author": {
+      "@type": "Organization",
+      "name": "Ghost Compiler"
+    },
+    "version": "1.0.0",
+    "url": "https://ghostcompiler.github.io/laravel-hetzner-cloud/"
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body class="docs-page">
+  <header class="site-header docs-header">
+    <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <a class="brand" href="#overview">
+      <img src="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780666791/logo_mqnqn4.png" alt="Ghost Compiler logo">
+      <span>Hetzner Cloud</span>
+    </a>
+    <span class="version-pill">v1.0.0</span>
+    <div class="doc-search">
+      <input id="docSearch" type="search" placeholder="Search documentation">
+    </div>
+    <nav class="top-links">
+      <a href="#overview">Overview</a>
+      <a href="#installation">Install</a>
+      <a href="#servers">Servers</a>
+      <a href="#helper-cheatsheet">Cheatsheet</a>
+      
+      <!-- Segmented Theme Switcher Control -->
+      <div class="theme-segmented-control" role="radiogroup" aria-label="Theme switcher">
+        <button class="theme-control-btn" data-theme-val="light" aria-label="Light Mode" title="Light Mode">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <button class="theme-control-btn" data-theme-val="dark" aria-label="Dark Mode" title="Dark Mode">
+          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+        <button class="theme-control-btn" data-theme-val="system" aria-label="System Mode" title="System Mode">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Overlay for mobile navigation drawer -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar" id="docsSidebar" aria-label="Documentation navigation">
+      <div class="sidebar-header-mobile">
+        <span>Navigation</span>
+        <button id="closeSidebarBtn" class="close-sidebar-btn" aria-label="Close navigation">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Token Configuration Persistent Widget -->
+      <div class="token-config-box">
+        <div class="token-config-title">API Authentication</div>
+        <div class="token-input-row">
+          <input type="password" id="apiTokenInput" class="input-field" placeholder="Enter API Token...">
+          <button type="button" class="run-btn" id="saveTokenBtn" style="height: 38px; align-self: auto; border-radius: 8px;">Save</button>
+        </div>
+        <div class="limits-mini-grid">
+          <div class="limit-cell"><span>Limit</span><strong id="globalLimitVal">-</strong></div>
+          <div class="limit-cell"><span>Rem.</span><strong id="globalRemainingVal">-</strong></div>
+          <div class="limit-cell"><span>Reset</span><strong id="globalResetVal">-</strong></div>
+        </div>
+      </div>
+
+      <div class="sidebar-group">
+        <p>Start</p>
+        <a href="#overview">Overview</a>
+        <a href="#installation">Installation</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#service-provider">Service Provider</a>
+        <a href="#facades">Facades</a>
+      </div>
+      <div class="sidebar-group">
+        <p>Resources</p>
+        <a href="#servers">Servers</a>
+        <a href="#volumes">Volumes</a>
+        <a href="#networks">Networks</a>
+        <a href="#firewalls">Firewalls</a>
+        <a href="#floating-ips">Floating IPs</a>
+        <a href="#primary-ips">Primary IPs</a>
+        <a href="#load-balancers">Load Balancers</a>
+        <a href="#ssh-keys">SSH Keys</a>
+        <a href="#images">Images</a>
+        <a href="#certificates">Certificates</a>
+        <a href="#placement-groups">Placement Groups</a>
+        <a href="#locations">Locations</a>
+        <a href="#datacenters">Datacenters</a>
+        <a href="#isos">ISOs</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#actions">Actions</a>
+        <a href="#server-types">Server Types</a>
+        <a href="#load-balancer-types">Load Balancer Types</a>
+      </div>
+      <div class="sidebar-group">
+        <p>Advanced</p>
+        <a href="#async-requests">Async Requests</a>
+        <a href="#batch-operations">Batch Operations</a>
+        <a href="#retries-limits">Retries & Limits</a>
+        <a href="#exceptions">Exceptions</a>
+      </div>
+      <div class="sidebar-group">
+        <p>Reference</p>
+        <a href="#helper-cheatsheet">Helper Cheatsheet</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </aside>
+
+    <main class="doc-article">
+      
+      <section id="overview" data-title="Overview">
+        <p class="eyebrow">Documentation v1.0.0</p>
+        <h1>Overview</h1>
+        <p class="lead">The Laravel Hetzner Cloud SDK provides a production-ready client interface for managing cloud servers, volumes, networks, firewalls, and load balancers. Compatible with PHP 7.4 through 8.5, and Laravel 8 through 13.</p>
+        <div class="callout">
+          <strong>Fully Type-Safe DTOs.</strong>
+          Every response matches structured class mappings with static `fromArray()` hydrators, allowing autocomplete and IDE indexing.
+        </div>
+      </section>
+
+      <section id="installation" data-title="Installation">
+        <h2>Installation</h2>
+        <p>Install the package through Composer:</p>
+        <pre><code>composer require ghostcompiler/laravel-hetzner-cloud</code></pre>
+        <p>Publish the configuration assets:</p>
+        <pre><code>php artisan vendor:publish --provider="Vendor\HetznerCloud\Providers\HetznerCloudServiceProvider" --tag="config"</code></pre>
+      </section>
+
+      <section id="configuration" data-title="Configuration">
+        <h2>Configuration</h2>
+        <p>The published configuration file lives at <code>config/hetzner-cloud.php</code>.</p>
+        <pre><code>return [
+    'token' => env('HETZNER_CLOUD_TOKEN'),
+    'base_url' => env('HETZNER_CLOUD_BASE_URL', 'https://api.hetzner.cloud/v1'),
+    'timeout' => (int) env('HETZNER_CLOUD_TIMEOUT', 30),
+    'retries' => (int) env('HETZNER_CLOUD_RETRIES', 3),
+    'retry_backoff' => (int) env('HETZNER_CLOUD_RETRY_BACKOFF', 100),
+    'logging' => [
+        'enabled' => (bool) env('HETZNER_CLOUD_LOGGING_ENABLED', false),
+        'channel' => env('HETZNER_CLOUD_LOGGING_CHANNEL'),
+    ],
+];</code></pre>
+      </section>
+
+      <section id="service-provider" data-title="Service Provider">
+        <h2>Service Provider</h2>
+        <p>The service provider binds the singleton client and orchestrator to Laravel's service container.</p>
+        <pre><code>use Vendor\HetznerCloud\Managers\HetznerManager;
+
+$manager = app(HetznerManager::class);
+$servers = $manager->servers()->all();</code></pre>
+      </section>
+
+      <section id="facades" data-title="Facades">
+        <h2>Facades</h2>
+        <p>Interact with the SDK fluently using the Facade accessor.</p>
+        <pre><code>use Vendor\HetznerCloud\Facades\Hetzner;
+
+$server = Hetzner::servers()->find(123);</code></pre>
+      </section>
+
+      <section id="servers" data-title="Servers">
+        <h2>Servers</h2>
+        <p>Manage VM instances, trigger power status controls, attach networks, and boot rescue environments.</p>
+        <pre><code>// List servers
+$servers = Hetzner::servers()->all();
+
+// Create server
+$response = Hetzner::servers()->create([
+    'name' => 'web-01',
+    'server_type' => 'cx22',
+    'image' => 'ubuntu-24.04',
+    'location' => 'fsn1',
+]);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/servers">
+          <div class="tester-title">Test API: List Servers</div>
+          <div class="tester-form">
+            <div class="tester-fields">
+              <div class="form-group">
+                <label>Name filter</label>
+                <input type="text" class="input-field param-input" data-param-name="name" placeholder="web-01">
+              </div>
+              <div class="form-group">
+                <label>Page</label>
+                <input type="number" class="input-field param-input" data-param-name="page" placeholder="1">
+              </div>
+            </div>
+            <button type="button" class="run-btn">Run GET /servers</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <div class="limits-mini-grid" style="margin: 8px;">
+              <div class="limit-cell"><span>Limit</span><strong class="limit-val">-</strong></div>
+              <div class="limit-cell"><span>Rem.</span><strong class="remaining-val">-</strong></div>
+              <div class="limit-cell"><span>Reset</span><strong class="reset-val">-</strong></div>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="volumes" data-title="Volumes">
+        <h2>Volumes</h2>
+        <p>Attach SSD block storage disks to servers.</p>
+        <pre><code>$volumes = Hetzner::volumes()->all();
+Hetzner::volumes()->attach($volumeId, $serverId);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/volumes">
+          <div class="tester-title">Test API: List Volumes</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /volumes</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <div class="limits-mini-grid" style="margin: 8px;">
+              <div class="limit-cell"><span>Limit</span><strong class="limit-val">-</strong></div>
+              <div class="limit-cell"><span>Rem.</span><strong class="remaining-val">-</strong></div>
+              <div class="limit-cell"><span>Reset</span><strong class="reset-val">-</strong></div>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="networks" data-title="Networks">
+        <h2>Networks</h2>
+        <p>Private IP infrastructure networks for server communication.</p>
+        <pre><code>$networks = Hetzner::networks()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/networks">
+          <div class="tester-title">Test API: List Networks</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /networks</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="firewalls" data-title="Firewalls">
+        <h2>Firewalls</h2>
+        <p>Configure stateless inbound and outbound security rules.</p>
+        <pre><code>Hetzner::firewalls()->apply($firewallId, $serverId);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/firewalls">
+          <div class="tester-title">Test API: List Firewalls</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /firewalls</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="floating-ips" data-title="Floating IPs">
+        <h2>Floating IPs</h2>
+        <p>Allocate highly available IP addresses routing to servers dynamically.</p>
+        <pre><code>Hetzner::floatingIps()->assign($ipId, $serverId);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/floating_ips">
+          <div class="tester-title">Test API: List Floating IPs</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /floating_ips</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="primary-ips" data-title="Primary IPs">
+        <h2>Primary IPs</h2>
+        <p>Provision static primary interface IPs.</p>
+        <pre><code>Hetzner::primaryIps()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/primary_ips">
+          <div class="tester-title">Test API: List Primary IPs</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /primary_ips</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="load-balancers" data-title="Load Balancers">
+        <h2>Load Balancers</h2>
+        <p>Traffic distribution proxies for targets cluster pools.</p>
+        <pre><code>Hetzner::loadBalancers()->addTarget($lbId, ['type' => 'server', 'server' => ['id' => $serverId]]);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/load_balancers">
+          <div class="tester-title">Test API: List Load Balancers</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /load_balancers</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="ssh-keys" data-title="SSH Keys">
+        <h2>SSH Keys</h2>
+        <p>Authentication credentials for VM deployments.</p>
+        <pre><code>Hetzner::sshKeys()->create(['name' => 'key', 'public_key' => 'ssh-rsa...']);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/ssh_keys">
+          <div class="tester-title">Test API: List SSH Keys</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /ssh_keys</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="images" data-title="Images">
+        <h2>Images</h2>
+        <p>OS base distributions and backups snapshots.</p>
+        <pre><code>$images = Hetzner::images()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/images">
+          <div class="tester-title">Test API: List Images</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /images</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="certificates" data-title="Certificates">
+        <h2>Certificates</h2>
+        <p>TLS keys configuration storage.</p>
+        <pre><code>Hetzner::certificates()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/certificates">
+          <div class="tester-title">Test API: List Certificates</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /certificates</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="placement-groups" data-title="Placement Groups">
+        <h2>Placement Groups</h2>
+        <p>Server scheduling spread layout policies.</p>
+        <pre><code>Hetzner::placementGroups()->create(['name' => 'grp', 'type' => 'spread']);</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/placement_groups">
+          <div class="tester-title">Test API: List Placement Groups</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /placement_groups</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="locations" data-title="Locations">
+        <h2>Locations</h2>
+        <p>Read geographical server centers.</p>
+        <pre><code>$locs = Hetzner::locations()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/locations">
+          <div class="tester-title">Test API: List Locations</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /locations</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="datacenters" data-title="Datacenters">
+        <h2>Datacenters</h2>
+        <p>Information on physical facilities.</p>
+        <pre><code>$dcs = Hetzner::datacenters()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/datacenters">
+          <div class="tester-title">Test API: List Datacenters</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /datacenters</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="isos" data-title="ISOs">
+        <h2>ISOs</h2>
+        <p>Optical disk installations catalog.</p>
+        <pre><code>$isos = Hetzner::isos()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/isos">
+          <div class="tester-title">Test API: List ISOs</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /isos</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" data-title="Pricing">
+        <h2>Pricing</h2>
+        <p>List product pricing rates.</p>
+        <pre><code>$pricing = Hetzner::pricing()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/pricing">
+          <div class="tester-title">Test API: Get Pricing</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /pricing</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="actions" data-title="Actions">
+        <h2>Actions</h2>
+        <p>Lifecycle action history.</p>
+        <pre><code>$actions = Hetzner::actions()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/actions">
+          <div class="tester-title">Test API: List Actions</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /actions</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="server-types" data-title="Server Types">
+        <h2>Server Types</h2>
+        <p>Available VM hardware configurations.</p>
+        <pre><code>$types = Hetzner::serverTypes()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/server_types">
+          <div class="tester-title">Test API: List Server Types</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /server_types</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="load-balancer-types" data-title="Load Balancer Types">
+        <h2>Load Balancer Types</h2>
+        <p>Capacity limits configurations for load balancers.</p>
+        <pre><code>$lbTypes = Hetzner::loadBalancerTypes()->all();</code></pre>
+
+        <!-- API Tester -->
+        <div class="tester-box" data-method="GET" data-path="/load_balancer_types">
+          <div class="tester-title">Test API: List LB Types</div>
+          <div class="tester-form">
+            <button type="button" class="run-btn">Run GET /load_balancer_types</button>
+          </div>
+          <div class="tester-response" style="display:none;">
+            <div class="response-meta">
+              <span class="status-badge"><span class="status-dot"></span><span class="status-label"></span></span>
+              <span class="response-latency"></span>
+              <button type="button" class="copy-response-btn">Copy</button>
+            </div>
+            <pre class="response-body-pre"><code class="response-code"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="async-requests" data-title="Async Requests">
+        <h2>Async Requests</h2>
+        <p>Configure queries asynchronously to yield Guzzle Promises.</p>
+        <pre><code>$promise = Hetzner::servers()->async()->all();
+$servers = $promise->wait();</code></pre>
+      </section>
+
+      <section id="batch-operations" data-title="Batch Operations">
+        <h2>Batch Operations</h2>
+        <p>Run calls concurrently in pooled execution tasks.</p>
+        <pre><code>$results = Hetzner::batch([
+    fn () => Hetzner::servers()->find(1),
+    fn () => Hetzner::servers()->find(2),
+]);</code></pre>
+      </section>
+
+      <section id="retries-limits" data-title="Retries & Limits">
+        <h2>Retries & Rate Limits</h2>
+        <p>Request pipeline is governed by automatic Guzzle middleware.</p>
+        <div class="mermaid">graph TD
+  Request["Request Fired"] --> Client["HetznerClient Client"]
+  Client --> Send["Guzzle Send"]
+  Send --> RateLimit{"Status 429?"}
+  RateLimit -- Yes --> Parse["Read RateLimit-Reset Header"]
+  Parse --> Sleep["Wait/Sleep"]
+  Sleep --> Send
+  RateLimit -- No --> Success["Response Decoded"]</div>
+      </section>
+
+      <section id="exceptions" data-title="Exceptions">
+        <h2>Exception Handling</h2>
+        <p>HTTP error codes automatically map to specific PHP exception classes.</p>
+        <pre><code>try {
+    Hetzner::servers()->find(999);
+} catch (\Vendor\HetznerCloud\Exceptions\NotFoundException $e) {
+    // 404 Error
+}</code></pre>
+      </section>
+
+      <section id="helper-cheatsheet" data-title="Helper Cheatsheet">
+        <h2>Helper Cheatsheet</h2>
+        <p>Quick copy reference table for common helper methods.</p>
+        <div class="command-list">
+          <code>Hetzner::ping();</code>
+          <code>Hetzner::version();</code>
+          <code>Hetzner::rateLimit();</code>
+          <code>Hetzner::health();</code>
+          <code>Hetzner::config();</code>
+          <code>Hetzner::client();</code>
+        </div>
+      </section>
+
+      <section id="faq" data-title="FAQ">
+        <h2>FAQ</h2>
+        <div class="faq">
+          <h3>Does the SDK support multiple accounts?</h3>
+          <p>Yes. Change credentials dynamically using <code>Hetzner::authenticate($token)</code>.</p>
+          <h3>How is pagination handled?</h3>
+          <p>Use <code>paginate(perPage, page)</code>. It returns a PaginatedResponse wrapper including the items collection and PaginationMeta DTO.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside class="on-this-page" aria-label="On this page">
+      <p>On this page</p>
+      <div id="toc"></div>
+    </aside>
+  </div>
+
+  <footer class="site-header" style="justify-content: center; font-size: .88rem; color: var(--muted); border-top: 1px solid var(--line); border-bottom: none; margin-top: 40px; min-height: 80px;">
+    <span>Laravel Hetzner Cloud SDK by Ghost Compiler. hello@ghostcompiler.com</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
