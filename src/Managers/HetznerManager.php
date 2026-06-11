@@ -76,18 +76,19 @@ class HetznerManager
     {
         $this->client->startBatch();
 
+        $callbackPromises = [];
         foreach ($callbacks as $callback) {
-            $callback();
+            $callbackPromises[] = $callback();
         }
 
-        $promises = $this->client->endBatch();
+        $this->client->endBatch();
 
-        if (empty($promises)) {
+        if (empty($callbackPromises)) {
             return [];
         }
 
-        // Wait for all promises concurrently
-        return \GuzzleHttp\Promise\Utils::all($promises)->wait();
+        // Wait for all callback promises concurrently
+        return \GuzzleHttp\Promise\Utils::all($callbackPromises)->wait();
     }
 
     public function servers(): ServerManager

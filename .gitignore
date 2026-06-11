@@ -7,4 +7,5 @@
 .DS_Store
 .idea/
 .vscode/
+/run-tests.sh
 *.log

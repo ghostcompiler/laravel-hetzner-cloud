@@ -65,8 +65,6 @@ class MockedHttpTest extends TestCase
             )
         ]);
 
-        // Swap client in container/manager
-        Hetzner::client()->setGuzzleClient($client->setToken('test-token')->setAsync(false)->client()); // Wait, let's just use the client we built
         $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
 
         $servers = $manager->servers()->all();
