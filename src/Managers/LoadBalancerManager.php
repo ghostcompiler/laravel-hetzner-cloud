@@ -71,9 +71,6 @@ class LoadBalancerManager extends AbstractManager
 
     public function addTarget($id, array $target)
     {
-        $params = is_assoc($target) ? $target : ['target' => $target];
-        // Wait, is_assoc helper might not exist. Let's make sure we format it or accept raw array.
-        // Let's just pass the raw target array or format it if 'target' key is not present.
         if (!isset($target['target']) && !isset($target['type'])) {
             $params = ['target' => $target];
         } else {

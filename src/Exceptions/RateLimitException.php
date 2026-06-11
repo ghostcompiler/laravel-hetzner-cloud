@@ -16,7 +16,7 @@ class RateLimitException extends ApiException
         ?int $limit = null,
         ?int $remaining = null,
         ?int $reset = null,
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ) {
         parent::__construct($message, $code, $errorCode, $details, $previous);
         $this->limit = $limit;
