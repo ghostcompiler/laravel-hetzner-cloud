@@ -27,6 +27,11 @@ class HetznerManager
 
     public function version(): string
     {
+        $path = __DIR__ . '/../../composer.json';
+        if (file_exists($path)) {
+            $composer = json_decode(file_get_contents($path), true);
+            return $composer['version'] ?? '1.0.0';
+        }
         return '1.0.0';
     }
 
