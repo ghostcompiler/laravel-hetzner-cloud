@@ -1,0 +1,10 @@
+/vendor/
+/composer.lock
+.phpunit.result.cache
+.phpunit.cache/
+.phpstan-cache/
+.psalm/
+.DS_Store
+.idea/
+.vscode/
+*.log
