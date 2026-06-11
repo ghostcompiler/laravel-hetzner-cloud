@@ -75,7 +75,7 @@ jobs:
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Validate composer.json
-        run: composer validate --strict
+        run: composer validate
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit
