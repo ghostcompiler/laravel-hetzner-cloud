@@ -5,31 +5,43 @@ namespace Vendor\HetznerCloud\DTOs;
 class Image
 {
     public int $id;
+
     public string $type;
+
     public string $status;
+
     public ?string $name = null;
+
     public string $description;
+
     public ?float $imageSize = null;
+
     public float $diskSize;
+
     public string $created;
+
     public ?array $createdFrom = null;
+
     public ?string $boundTo = null;
+
     public ?string $osFlavor = null;
+
     public ?string $osVersion = null;
+
     public bool $rapidRebuild = false;
+
     public array $protection = [];
+
     public ?string $deprecated = null;
+
     public array $labels = [];
 
     /**
      * Create a new DTO instance from array data.
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
-        $image = new self();
+        $image = new self;
         $image->id = (int) ($data['id'] ?? 0);
         $image->type = (string) ($data['type'] ?? '');
         $image->status = (string) ($data['status'] ?? '');
@@ -46,6 +58,7 @@ class Image
         $image->protection = (array) ($data['protection'] ?? []);
         $image->deprecated = isset($data['deprecated']) ? (string) $data['deprecated'] : null;
         $image->labels = (array) ($data['labels'] ?? []);
+
         return $image;
     }
 }

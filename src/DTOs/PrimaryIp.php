@@ -5,28 +5,37 @@ namespace Vendor\HetznerCloud\DTOs;
 class PrimaryIp
 {
     public int $id;
+
     public string $name;
+
     public string $ip;
+
     public string $type;
+
     public ?int $assigneeId = null;
+
     public string $assigneeType;
+
     public array $datacenter = [];
+
     public array $dnsPtr = [];
+
     public bool $blocked = false;
+
     public string $created;
+
     public array $protection = [];
+
     public array $labels = [];
+
     public bool $autoDelete = false;
 
     /**
      * Create a new DTO instance from array data.
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
-        $ip = new self();
+        $ip = new self;
         $ip->id = (int) ($data['id'] ?? 0);
         $ip->name = (string) ($data['name'] ?? '');
         $ip->ip = (string) ($data['ip'] ?? '');
@@ -40,6 +49,7 @@ class PrimaryIp
         $ip->protection = (array) ($data['protection'] ?? []);
         $ip->labels = (array) ($data['labels'] ?? []);
         $ip->autoDelete = (bool) ($data['auto_delete'] ?? false);
+
         return $ip;
     }
 }

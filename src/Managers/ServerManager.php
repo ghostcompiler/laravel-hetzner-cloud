@@ -2,6 +2,7 @@
 
 namespace Vendor\HetznerCloud\Managers;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use Vendor\HetznerCloud\Collections\ActionCollection;
 use Vendor\HetznerCloud\Collections\ServerCollection;
 use Vendor\HetznerCloud\DTOs\Action;
@@ -15,7 +16,7 @@ class ServerManager extends AbstractManager
     /**
      * Get all servers.
      *
-     * @return ServerCollection|\GuzzleHttp\Promise\PromiseInterface
+     * @return ServerCollection|PromiseInterface
      */
     public function all()
     {
@@ -23,6 +24,7 @@ class ServerManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $servers = array_map(fn (array $item) => Server::fromArray($item), $data['servers'] ?? []);
+
             return new ServerCollection($servers);
         });
     }
@@ -30,7 +32,7 @@ class ServerManager extends AbstractManager
     /**
      * Alias for all().
      *
-     * @return ServerCollection|\GuzzleHttp\Promise\PromiseInterface
+     * @return ServerCollection|PromiseInterface
      */
     public function get()
     {
@@ -40,9 +42,7 @@ class ServerManager extends AbstractManager
     /**
      * Paginate servers.
      *
-     * @param int $perPage
-     * @param int $page
-     * @return PaginatedResponse|\GuzzleHttp\Promise\PromiseInterface
+     * @return PaginatedResponse|PromiseInterface
      */
     public function paginate(int $perPage = 25, int $page = 1)
     {
@@ -52,6 +52,7 @@ class ServerManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $servers = array_map(fn (array $item) => Server::fromArray($item), $data['servers'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new ServerCollection($servers), $meta);
         });
     }
@@ -59,8 +60,7 @@ class ServerManager extends AbstractManager
     /**
      * Find a server by ID.
      *
-     * @param int $id
-     * @return Server|\GuzzleHttp\Promise\PromiseInterface
+     * @return Server|PromiseInterface
      */
     public function find(int $id)
     {
@@ -74,8 +74,7 @@ class ServerManager extends AbstractManager
     /**
      * Create a server.
      *
-     * @param array $data
-     * @return ServerCreateResponse|\GuzzleHttp\Promise\PromiseInterface
+     * @return ServerCreateResponse|PromiseInterface
      */
     public function create(array $data)
     {
@@ -89,9 +88,7 @@ class ServerManager extends AbstractManager
     /**
      * Update a server.
      *
-     * @param int $id
-     * @param array $data
-     * @return Server|\GuzzleHttp\Promise\PromiseInterface
+     * @return Server|PromiseInterface
      */
     public function update(int $id, array $data)
     {
@@ -105,8 +102,7 @@ class ServerManager extends AbstractManager
     /**
      * Delete a server.
      *
-     * @param int $id
-     * @return Action|null|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|null|PromiseInterface
      */
     public function delete(int $id)
     {
@@ -120,9 +116,7 @@ class ServerManager extends AbstractManager
     /**
      * Get metrics for a server.
      *
-     * @param int $id
-     * @param array $params
-     * @return array|\GuzzleHttp\Promise\PromiseInterface
+     * @return array|PromiseInterface
      */
     public function metrics(int $id, array $params = [])
     {
@@ -132,8 +126,7 @@ class ServerManager extends AbstractManager
     /**
      * Get action history for a server.
      *
-     * @param int $id
-     * @return ActionCollection|\GuzzleHttp\Promise\PromiseInterface
+     * @return ActionCollection|PromiseInterface
      */
     public function actions(int $id)
     {
@@ -141,6 +134,7 @@ class ServerManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $actions = array_map(fn (array $item) => Action::fromArray($item), $data['actions'] ?? []);
+
             return new ActionCollection($actions);
         });
     }
@@ -148,8 +142,7 @@ class ServerManager extends AbstractManager
     /**
      * Power on server.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function powerOn(int $id)
     {
@@ -159,8 +152,7 @@ class ServerManager extends AbstractManager
     /**
      * Power off server.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function powerOff(int $id)
     {
@@ -170,8 +162,7 @@ class ServerManager extends AbstractManager
     /**
      * Shutdown server.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function shutdown(int $id)
     {
@@ -181,8 +172,7 @@ class ServerManager extends AbstractManager
     /**
      * Reboot server.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function reboot(int $id)
     {
@@ -192,8 +182,7 @@ class ServerManager extends AbstractManager
     /**
      * Reset server power.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function reset(int $id)
     {
@@ -203,9 +192,8 @@ class ServerManager extends AbstractManager
     /**
      * Rebuild server from image.
      *
-     * @param int $id
-     * @param string|int $image
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  string|int  $image
+     * @return Action|PromiseInterface
      */
     public function rebuild(int $id, $image)
     {
@@ -215,9 +203,7 @@ class ServerManager extends AbstractManager
     /**
      * Enable rescue mode.
      *
-     * @param int $id
-     * @param array $params
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function enableRescue(int $id, array $params = [])
     {
@@ -227,8 +213,7 @@ class ServerManager extends AbstractManager
     /**
      * Disable rescue mode.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function disableRescue(int $id)
     {
@@ -238,8 +223,7 @@ class ServerManager extends AbstractManager
     /**
      * Enable backups.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function enableBackup(int $id)
     {
@@ -249,8 +233,7 @@ class ServerManager extends AbstractManager
     /**
      * Disable backups.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function disableBackup(int $id)
     {
@@ -260,9 +243,8 @@ class ServerManager extends AbstractManager
     /**
      * Attach ISO image.
      *
-     * @param int $id
-     * @param string|int $iso
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  string|int  $iso
+     * @return Action|PromiseInterface
      */
     public function attachIso(int $id, $iso)
     {
@@ -272,8 +254,7 @@ class ServerManager extends AbstractManager
     /**
      * Detach ISO image.
      *
-     * @param int $id
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @return Action|PromiseInterface
      */
     public function detachIso(int $id)
     {
@@ -283,52 +264,52 @@ class ServerManager extends AbstractManager
     /**
      * Attach to a network.
      *
-     * @param int $id
-     * @param array|int $network
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  array|int  $network
+     * @return Action|PromiseInterface
      */
     public function attachToNetwork(int $id, $network)
     {
         $params = is_array($network) ? $network : ['network' => (int) $network];
+
         return $this->postAction($id, 'attach_to_network', $params);
     }
 
     /**
      * Detach from a network.
      *
-     * @param int $id
-     * @param array|int $network
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  array|int  $network
+     * @return Action|PromiseInterface
      */
     public function detachFromNetwork(int $id, $network)
     {
         $params = is_array($network) ? $network : ['network' => (int) $network];
+
         return $this->postAction($id, 'detach_from_network', $params);
     }
 
     /**
      * Add server to a firewall.
      *
-     * @param int $id
-     * @param array|int $firewall
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  array|int  $firewall
+     * @return Action|PromiseInterface
      */
     public function addToFirewall(int $id, $firewall)
     {
         $params = is_array($firewall) ? $firewall : ['firewall' => (int) $firewall];
+
         return $this->postAction($id, 'add_to_firewall', $params);
     }
 
     /**
      * Remove server from a firewall.
      *
-     * @param int $id
-     * @param array|int $firewall
-     * @return Action|\GuzzleHttp\Promise\PromiseInterface
+     * @param  array|int  $firewall
+     * @return Action|PromiseInterface
      */
     public function removeFromFirewall(int $id, $firewall)
     {
         $params = is_array($firewall) ? $firewall : ['firewall' => (int) $firewall];
+
         return $this->postAction($id, 'remove_from_firewall', $params);
     }
 

@@ -5,7 +5,9 @@ namespace Vendor\HetznerCloud\Exceptions;
 class RateLimitException extends ApiException
 {
     protected ?int $limit = null;
+
     protected ?int $remaining = null;
+
     protected ?int $reset = null;
 
     public function __construct(

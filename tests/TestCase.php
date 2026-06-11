@@ -2,6 +2,7 @@
 
 namespace Vendor\HetznerCloud\Tests;
 
+use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Vendor\HetznerCloud\Facades\Hetzner;
 use Vendor\HetznerCloud\Providers\HetznerCloudServiceProvider;
@@ -11,7 +12,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Get package providers.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -24,7 +25,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Get package aliases.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
@@ -37,7 +38,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Define environment setup.
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)

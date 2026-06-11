@@ -3,6 +3,7 @@
 namespace Vendor\HetznerCloud\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Vendor\HetznerCloud\Managers\HetznerManager;
 
 /**
  * @method static \Vendor\HetznerCloud\Managers\HetznerManager authenticate(string $token)
@@ -32,7 +33,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Vendor\HetznerCloud\Http\Client\HetznerClient client()
  * @method static array batch(array $callbacks)
  *
- * @see \Vendor\HetznerCloud\Managers\HetznerManager
+ * @see HetznerManager
  */
 class Hetzner extends Facade
 {

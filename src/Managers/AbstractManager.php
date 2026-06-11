@@ -10,8 +10,11 @@ abstract class AbstractManager
     protected HetznerClient $client;
 
     protected array $filters = [];
+
     protected ?string $sort = null;
+
     protected ?int $perPage = null;
+
     protected ?int $page = null;
 
     public function __construct(HetznerClient $client)
@@ -22,67 +25,65 @@ abstract class AbstractManager
     /**
      * Set filters for the request.
      *
-     * @param array $filters
      * @return $this
      */
     public function filter(array $filters): self
     {
         $this->filters = array_merge($this->filters, $filters);
+
         return $this;
     }
 
     /**
      * Set sort criteria.
      *
-     * @param string $sort
      * @return $this
      */
     public function sort(string $sort): self
     {
         $this->sort = $sort;
+
         return $this;
     }
 
     /**
      * Set per page limit.
      *
-     * @param int $perPage
      * @return $this
      */
     public function perPage(int $perPage): self
     {
         $this->perPage = $perPage;
+
         return $this;
     }
 
     /**
      * Set specific page.
      *
-     * @param int $page
      * @return $this
      */
     public function page(int $page): self
     {
         $this->page = $page;
+
         return $this;
     }
 
     /**
      * Configure next request to run asynchronously.
      *
-     * @param bool $async
      * @return $this
      */
     public function async(bool $async = true): self
     {
         $this->client->setAsync($async);
+
         return $this;
     }
 
     /**
      * Build parameters for GET requests.
-     *
-     * @return array
      */
     protected function buildQueryParams(): array
     {
@@ -107,8 +108,6 @@ abstract class AbstractManager
 
     /**
      * Reset the query builder state.
-     *
-     * @return void
      */
     protected function resetQuery(): void
     {
@@ -121,8 +120,6 @@ abstract class AbstractManager
     /**
      * Perform a GET request.
      *
-     * @param string $uri
-     * @param array $query
      * @return mixed
      */
     protected function getRequest(string $uri, array $query = [])
@@ -133,56 +130,52 @@ abstract class AbstractManager
     /**
      * Perform a POST request.
      *
-     * @param string $uri
-     * @param array $data
      * @return mixed
      */
     protected function postRequest(string $uri, array $data = [])
     {
         $options = [];
-        if (!empty($data)) {
+        if (! empty($data)) {
             $options['json'] = $data;
         }
+
         return $this->client->request('POST', $uri, $options);
     }
 
     /**
      * Perform a PUT request.
      *
-     * @param string $uri
-     * @param array $data
      * @return mixed
      */
     protected function putRequest(string $uri, array $data = [])
     {
         $options = [];
-        if (!empty($data)) {
+        if (! empty($data)) {
             $options['json'] = $data;
         }
+
         return $this->client->request('PUT', $uri, $options);
     }
 
     /**
      * Perform a DELETE request.
      *
-     * @param string $uri
-     * @param array $data
      * @return mixed
      */
     protected function deleteRequest(string $uri, array $data = [])
     {
         $options = [];
-        if (!empty($data)) {
+        if (! empty($data)) {
             $options['json'] = $data;
         }
+
         return $this->client->request('DELETE', $uri, $options);
     }
 
     /**
      * Helper to wrap a promise mapping response data to DTOs or collections.
      *
-     * @param mixed $result The return value of request() which can be Guzzle Promise or decoded array
-     * @param callable $hydrator
+     * @param  mixed  $result  The return value of request() which can be Guzzle Promise or decoded array
      * @return mixed PromiseInterface or hydrated DTO/Collection
      */
     protected function hydrate($result, callable $hydrator)

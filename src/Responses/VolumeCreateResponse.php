@@ -8,6 +8,7 @@ use Vendor\HetznerCloud\DTOs\Volume;
 class VolumeCreateResponse
 {
     public Volume $volume;
+
     public ?Action $action = null;
 
     public function __construct(Volume $volume, ?Action $action = null)
@@ -18,14 +19,12 @@ class VolumeCreateResponse
 
     /**
      * Create response wrapper from raw API data.
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {
         $volume = Volume::fromArray($data['volume'] ?? []);
         $action = isset($data['action']) ? Action::fromArray($data['action']) : null;
+
         return new self($volume, $action);
     }
 }

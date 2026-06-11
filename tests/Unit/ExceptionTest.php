@@ -25,13 +25,13 @@ class ExceptionTest extends TestCase
             'fields' => [
                 [
                     'name' => 'server_type',
-                    'message' => ['is required', 'must be valid']
+                    'message' => ['is required', 'must be valid'],
                 ],
                 [
                     'name' => 'name',
-                    'message' => ['must be unique']
-                ]
-            ]
+                    'message' => ['must be unique'],
+                ],
+            ],
         ];
 
         $e = new ValidationException('Unprocessable Entity', 422, 'invalid_input', $details);

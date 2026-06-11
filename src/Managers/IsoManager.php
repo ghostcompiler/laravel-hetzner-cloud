@@ -13,6 +13,7 @@ class IsoManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $isos = array_map(fn (array $item) => Iso::fromArray($item), $data['isos'] ?? []);
+
             return new IsoCollection($isos);
         });
     }

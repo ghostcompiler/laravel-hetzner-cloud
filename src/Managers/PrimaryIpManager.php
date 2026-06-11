@@ -16,6 +16,7 @@ class PrimaryIpManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $ips = array_map(fn (array $item) => PrimaryIp::fromArray($item), $data['primary_ips'] ?? []);
+
             return new PrimaryIpCollection($ips);
         });
     }
@@ -33,6 +34,7 @@ class PrimaryIpManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $ips = array_map(fn (array $item) => PrimaryIp::fromArray($item), $data['primary_ips'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new PrimaryIpCollection($ips), $meta);
         });
     }
@@ -75,6 +77,7 @@ class PrimaryIpManager extends AbstractManager
             'assignee_id' => (int) $serverId,
             'assignee_type' => 'server',
         ];
+
         return $this->postAction((int) $ipId, 'assign', $params);
     }
 

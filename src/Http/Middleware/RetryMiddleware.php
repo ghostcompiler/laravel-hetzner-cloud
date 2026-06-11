@@ -3,13 +3,13 @@
 namespace Vendor\HetznerCloud\Http\Middleware;
 
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class RetryMiddleware
 {
     private int $maxRetries;
+
     private int $backoffMultiplier;
 
     public function __construct(int $maxRetries = 3, int $backoffMultiplier = 100)
@@ -20,8 +20,6 @@ class RetryMiddleware
 
     /**
      * Get the decider callback for Guzzle's retry middleware.
-     *
-     * @return callable
      */
     public function decider(): callable
     {
@@ -54,8 +52,6 @@ class RetryMiddleware
 
     /**
      * Get the delay callback for Guzzle's retry middleware (returns delay in milliseconds).
-     *
-     * @return callable
      */
     public function delay(): callable
     {
@@ -66,6 +62,7 @@ class RetryMiddleware
                 if ($resetHeader !== '') {
                     $resetTime = (int) $resetHeader;
                     $delaySeconds = max(1, $resetTime - time());
+
                     // Return delay in milliseconds
                     return $delaySeconds * 1000;
                 }

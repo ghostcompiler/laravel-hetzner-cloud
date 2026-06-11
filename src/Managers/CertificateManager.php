@@ -16,6 +16,7 @@ class CertificateManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $certs = array_map(fn (array $item) => Certificate::fromArray($item), $data['certificates'] ?? []);
+
             return new CertificateCollection($certs);
         });
     }
@@ -33,6 +34,7 @@ class CertificateManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $certs = array_map(fn (array $item) => Certificate::fromArray($item), $data['certificates'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new CertificateCollection($certs), $meta);
         });
     }

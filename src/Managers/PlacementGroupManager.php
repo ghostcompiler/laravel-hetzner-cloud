@@ -15,6 +15,7 @@ class PlacementGroupManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $groups = array_map(fn (array $item) => PlacementGroup::fromArray($item), $data['placement_groups'] ?? []);
+
             return new PlacementGroupCollection($groups);
         });
     }
@@ -32,6 +33,7 @@ class PlacementGroupManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $groups = array_map(fn (array $item) => PlacementGroup::fromArray($item), $data['placement_groups'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new PlacementGroupCollection($groups), $meta);
         });
     }

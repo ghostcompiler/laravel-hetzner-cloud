@@ -13,6 +13,7 @@ class LoadBalancerTypeManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $types = array_map(fn (array $item) => LoadBalancerType::fromArray($item), $data['load_balancer_types'] ?? []);
+
             return new LoadBalancerTypeCollection($types);
         });
     }

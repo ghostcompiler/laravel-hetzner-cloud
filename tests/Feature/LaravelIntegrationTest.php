@@ -5,6 +5,8 @@ namespace Vendor\HetznerCloud\Tests\Feature;
 use Vendor\HetznerCloud\Facades\Hetzner;
 use Vendor\HetznerCloud\Http\Client\HetznerClient;
 use Vendor\HetznerCloud\Managers\HetznerManager;
+use Vendor\HetznerCloud\Managers\ServerManager;
+use Vendor\HetznerCloud\Managers\VolumeManager;
 use Vendor\HetznerCloud\Tests\TestCase;
 
 class LaravelIntegrationTest extends TestCase
@@ -33,7 +35,7 @@ class LaravelIntegrationTest extends TestCase
 
     public function test_facade_submanagers()
     {
-        $this->assertInstanceOf(\Vendor\HetznerCloud\Managers\ServerManager::class, Hetzner::servers());
-        $this->assertInstanceOf(\Vendor\HetznerCloud\Managers\VolumeManager::class, Hetzner::volumes());
+        $this->assertInstanceOf(ServerManager::class, Hetzner::servers());
+        $this->assertInstanceOf(VolumeManager::class, Hetzner::volumes());
     }
 }

@@ -6,8 +6,6 @@ class ValidationException extends ApiException
 {
     /**
      * Get the validation errors mapped by field name.
-     *
-     * @return array
      */
     public function getErrors(): array
     {

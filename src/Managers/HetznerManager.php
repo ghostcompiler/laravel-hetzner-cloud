@@ -2,11 +2,13 @@
 
 namespace Vendor\HetznerCloud\Managers;
 
+use GuzzleHttp\Promise\Utils;
 use Vendor\HetznerCloud\Http\Client\HetznerClient;
 
 class HetznerManager
 {
     private HetznerClient $client;
+
     private array $managers = [];
 
     public function __construct(HetznerClient $client)
@@ -17,6 +19,7 @@ class HetznerManager
     public function authenticate(string $token): self
     {
         $this->client->authenticate($token);
+
         return $this;
     }
 
@@ -27,11 +30,13 @@ class HetznerManager
 
     public function version(): string
     {
-        $path = __DIR__ . '/../../composer.json';
+        $path = __DIR__.'/../../composer.json';
         if (file_exists($path)) {
             $composer = json_decode(file_get_contents($path), true);
+
             return $composer['version'] ?? '1.0.0';
         }
+
         return '1.0.0';
     }
 
@@ -40,6 +45,7 @@ class HetznerManager
         if (function_exists('config')) {
             return config('hetzner-cloud') ?: [];
         }
+
         return [];
     }
 
@@ -52,6 +58,7 @@ class HetznerManager
     {
         try {
             $this->locations()->perPage(1)->get();
+
             return true;
         } catch (\Throwable $e) {
             return false;
@@ -73,9 +80,6 @@ class HetznerManager
 
     /**
      * Run multiple SDK requests concurrently.
-     *
-     * @param array $callbacks
-     * @return array
      */
     public function batch(array $callbacks): array
     {
@@ -93,7 +97,7 @@ class HetznerManager
         }
 
         // Wait for all callback promises concurrently
-        return \GuzzleHttp\Promise\Utils::all($callbackPromises)->wait();
+        return Utils::all($callbackPromises)->wait();
     }
 
     public function servers(): ServerManager
@@ -191,7 +195,7 @@ class HetznerManager
      */
     private function getManager(string $class)
     {
-        if (!isset($this->managers[$class])) {
+        if (! isset($this->managers[$class])) {
             $this->managers[$class] = new $class($this->client);
         }
 

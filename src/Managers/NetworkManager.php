@@ -16,6 +16,7 @@ class NetworkManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $networks = array_map(fn (array $item) => Network::fromArray($item), $data['networks'] ?? []);
+
             return new NetworkCollection($networks);
         });
     }
@@ -33,6 +34,7 @@ class NetworkManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $networks = array_map(fn (array $item) => Network::fromArray($item), $data['networks'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new NetworkCollection($networks), $meta);
         });
     }
@@ -72,30 +74,35 @@ class NetworkManager extends AbstractManager
     public function addSubnet($id, array $subnet)
     {
         $params = ['subnet' => $subnet];
+
         return $this->postAction((int) $id, 'add_subnet', $params);
     }
 
     public function deleteSubnet($id, array $subnet)
     {
         $params = ['subnet' => $subnet];
+
         return $this->postAction((int) $id, 'delete_subnet', $params);
     }
 
     public function addRoute($id, array $route)
     {
         $params = ['route' => $route];
+
         return $this->postAction((int) $id, 'add_route', $params);
     }
 
     public function deleteRoute($id, array $route)
     {
         $params = ['route' => $route];
+
         return $this->postAction((int) $id, 'delete_route', $params);
     }
 
     public function changeIpRange($id, string $ipRange)
     {
         $params = ['ip_range' => $ipRange];
+
         return $this->postAction((int) $id, 'change_ip_range', $params);
     }
 

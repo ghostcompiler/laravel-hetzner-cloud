@@ -5,6 +5,7 @@ namespace Vendor\HetznerCloud\Exceptions;
 class ApiException extends HetznerException
 {
     protected string $errorCode;
+
     protected array $details;
 
     public function __construct(string $message, int $code, string $errorCode = '', array $details = [], ?\Throwable $previous = null)

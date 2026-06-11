@@ -13,6 +13,7 @@ class DatacenterManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $dcs = array_map(fn (array $item) => Datacenter::fromArray($item), $data['datacenters'] ?? []);
+
             return new DatacenterCollection($dcs);
         });
     }

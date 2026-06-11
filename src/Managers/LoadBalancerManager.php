@@ -16,6 +16,7 @@ class LoadBalancerManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $lbs = array_map(fn (array $item) => LoadBalancer::fromArray($item), $data['load_balancers'] ?? []);
+
             return new LoadBalancerCollection($lbs);
         });
     }
@@ -33,6 +34,7 @@ class LoadBalancerManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $lbs = array_map(fn (array $item) => LoadBalancer::fromArray($item), $data['load_balancers'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new LoadBalancerCollection($lbs), $meta);
         });
     }
@@ -71,38 +73,43 @@ class LoadBalancerManager extends AbstractManager
 
     public function addTarget($id, array $target)
     {
-        if (!isset($target['target']) && !isset($target['type'])) {
+        if (! isset($target['target']) && ! isset($target['type'])) {
             $params = ['target' => $target];
         } else {
             $params = $target;
         }
+
         return $this->postAction((int) $id, 'add_target', $params);
     }
 
     public function removeTarget($id, $target = [])
     {
         $params = (array) $target;
-        if (!empty($params) && !isset($params['target']) && !isset($params['type'])) {
+        if (! empty($params) && ! isset($params['target']) && ! isset($params['type'])) {
             $params = ['target' => $params];
         }
+
         return $this->postAction((int) $id, 'remove_target', $params);
     }
 
     public function addService($id, array $service)
     {
         $params = isset($service['service']) ? $service : ['service' => $service];
+
         return $this->postAction((int) $id, 'add_service', $params);
     }
 
     public function deleteService($id, $listenPort = null)
     {
         $params = is_array($listenPort) ? $listenPort : ['listen_port' => (int) $listenPort];
+
         return $this->postAction((int) $id, 'delete_service', $params);
     }
 
     public function updateService($id, int $listenPort, array $service)
     {
         $params = ['listen_port' => $listenPort, 'service' => $service];
+
         return $this->postAction((int) $id, 'update_service', $params);
     }
 
@@ -134,12 +141,14 @@ class LoadBalancerManager extends AbstractManager
     public function attachToNetwork($id, $network)
     {
         $params = is_array($network) ? $network : ['network' => (int) $network];
+
         return $this->postAction((int) $id, 'attach_to_network', $params);
     }
 
     public function detachFromNetwork($id, $network)
     {
         $params = is_array($network) ? $network : ['network' => (int) $network];
+
         return $this->postAction((int) $id, 'detach_from_network', $params);
     }
 

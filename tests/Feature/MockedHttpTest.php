@@ -7,15 +7,17 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Vendor\HetznerCloud\Collections\ServerCollection;
+use Vendor\HetznerCloud\DTOs\Server;
 use Vendor\HetznerCloud\Exceptions\AuthenticationException;
 use Vendor\HetznerCloud\Exceptions\NetworkException;
-use Vendor\HetznerCloud\Exceptions\RateLimitException;
 use Vendor\HetznerCloud\Exceptions\ValidationException;
-use Vendor\HetznerCloud\Facades\Hetzner;
 use Vendor\HetznerCloud\Http\Client\HetznerClient;
 use Vendor\HetznerCloud\Http\Middleware\RetryMiddleware;
+use Vendor\HetznerCloud\Managers\HetznerManager;
 use Vendor\HetznerCloud\Tests\TestCase;
 
 class MockedHttpTest extends TestCase
@@ -49,8 +51,8 @@ class MockedHttpTest extends TestCase
         $responseBody = json_encode([
             'servers' => [
                 ['id' => 1, 'name' => 'web-1', 'status' => 'running'],
-                ['id' => 2, 'name' => 'web-2', 'status' => 'off']
-            ]
+                ['id' => 2, 'name' => 'web-2', 'status' => 'off'],
+            ],
         ]);
 
         $client = $this->createMockClient([
@@ -59,13 +61,13 @@ class MockedHttpTest extends TestCase
                 [
                     'RateLimit-Limit' => '3600',
                     'RateLimit-Remaining' => '3599',
-                    'RateLimit-Reset' => '1718115600'
+                    'RateLimit-Reset' => '1718115600',
                 ],
                 $responseBody
-            )
+            ),
         ]);
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         $servers = $manager->servers()->all();
 
@@ -84,12 +86,12 @@ class MockedHttpTest extends TestCase
             new Response(401, [], json_encode([
                 'error' => [
                     'code' => 'unauthorized',
-                    'message' => 'Invalid token'
-                ]
-            ]))
+                    'message' => 'Invalid token',
+                ],
+            ])),
         ]);
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         $this->expectException(AuthenticationException::class);
         $this->expectExceptionMessage('Invalid token');
@@ -106,14 +108,14 @@ class MockedHttpTest extends TestCase
                     'message' => 'Validation failed',
                     'details' => [
                         'fields' => [
-                            ['name' => 'name', 'message' => ['must be unique']]
-                        ]
-                    ]
-                ]
-            ]))
+                            ['name' => 'name', 'message' => ['must be unique']],
+                        ],
+                    ],
+                ],
+            ])),
         ]);
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         try {
             $manager->servers()->create(['name' => 'web-1']);
@@ -128,10 +130,10 @@ class MockedHttpTest extends TestCase
     public function test_network_exception_mapping()
     {
         $client = $this->createMockClient([
-            new ConnectException('Connection timed out', new Request('GET', 'servers'))
+            new ConnectException('Connection timed out', new Request('GET', 'servers')),
         ], 0); // No retries
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         $this->expectException(NetworkException::class);
         $this->expectExceptionMessage('Connection timed out');
@@ -142,7 +144,7 @@ class MockedHttpTest extends TestCase
     public function test_rate_limit_exception_mapping_and_retries()
     {
         $responseBody = json_encode([
-            'servers' => [['id' => 1, 'name' => 'web-1', 'status' => 'running']]
+            'servers' => [['id' => 1, 'name' => 'web-1', 'status' => 'running']],
         ]);
 
         // First call: 429 Too Many Requests
@@ -151,14 +153,14 @@ class MockedHttpTest extends TestCase
             new Response(429, [
                 'RateLimit-Limit' => '3600',
                 'RateLimit-Remaining' => '0',
-                'RateLimit-Reset' => (string)(time() + 1)
+                'RateLimit-Reset' => (string) (time() + 1),
             ], json_encode([
-                'error' => ['code' => 'rate_limit_exceeded', 'message' => 'Rate limit exceeded']
+                'error' => ['code' => 'rate_limit_exceeded', 'message' => 'Rate limit exceeded'],
             ])),
-            new Response(200, [], $responseBody)
+            new Response(200, [], $responseBody),
         ], 3, 0); // 3 retries, 0ms backoff multiplier for test speed
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         // Should retry once and succeed
         $servers = $manager->servers()->all();
@@ -170,23 +172,23 @@ class MockedHttpTest extends TestCase
     public function test_async_requests()
     {
         $responseBody = json_encode([
-            'servers' => [['id' => 1, 'name' => 'async-web', 'status' => 'running']]
+            'servers' => [['id' => 1, 'name' => 'async-web', 'status' => 'running']],
         ]);
 
         $client = $this->createMockClient([
-            new Response(200, [], $responseBody)
+            new Response(200, [], $responseBody),
         ]);
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         $promise = $manager->servers()->async()->all();
 
-        $this->assertInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class, $promise);
+        $this->assertInstanceOf(PromiseInterface::class, $promise);
 
         // Wait for resolution
         $servers = $promise->wait();
 
-        $this->assertInstanceOf(\Vendor\HetznerCloud\Collections\ServerCollection::class, $servers);
+        $this->assertInstanceOf(ServerCollection::class, $servers);
         $this->assertEquals('async-web', $servers->first()->name);
     }
 
@@ -197,19 +199,19 @@ class MockedHttpTest extends TestCase
 
         $client = $this->createMockClient([
             new Response(200, [], $responseBody1),
-            new Response(200, [], $responseBody2)
+            new Response(200, [], $responseBody2),
         ]);
 
-        $manager = new \Vendor\HetznerCloud\Managers\HetznerManager($client);
+        $manager = new HetznerManager($client);
 
         $results = $manager->batch([
             fn () => $manager->servers()->find(1),
-            fn () => $manager->servers()->find(2)
+            fn () => $manager->servers()->find(2),
         ]);
 
         $this->assertCount(2, $results);
-        $this->assertInstanceOf(\Vendor\HetznerCloud\DTOs\Server::class, $results[0]);
-        $this->assertInstanceOf(\Vendor\HetznerCloud\DTOs\Server::class, $results[1]);
+        $this->assertInstanceOf(Server::class, $results[0]);
+        $this->assertInstanceOf(Server::class, $results[1]);
         $this->assertEquals('web-1', $results[0]->name);
         $this->assertEquals('web-2', $results[1]->name);
     }

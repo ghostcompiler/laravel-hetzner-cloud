@@ -13,6 +13,7 @@ class LocationManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $locs = array_map(fn (array $item) => Location::fromArray($item), $data['locations'] ?? []);
+
             return new LocationCollection($locs);
         });
     }

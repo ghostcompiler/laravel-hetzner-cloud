@@ -16,6 +16,7 @@ class FirewallManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $firewalls = array_map(fn (array $item) => Firewall::fromArray($item), $data['firewalls'] ?? []);
+
             return new FirewallCollection($firewalls);
         });
     }
@@ -33,6 +34,7 @@ class FirewallManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $firewalls = array_map(fn (array $item) => Firewall::fromArray($item), $data['firewalls'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new FirewallCollection($firewalls), $meta);
         });
     }
@@ -75,9 +77,9 @@ class FirewallManager extends AbstractManager
             'apply_to' => [
                 [
                     'type' => 'server',
-                    'server' => ['id' => (int) $serverId]
-                ]
-            ]
+                    'server' => ['id' => (int) $serverId],
+                ],
+            ],
         ];
         // Note: Hetzner API returns {"actions": [...]} here. We can return the first action or array of Action.
         // Let's hydrate and return the actions as ActionCollection or the first action.
@@ -86,6 +88,7 @@ class FirewallManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $actions = $data['actions'] ?? [];
+
             return Action::fromArray($actions[0] ?? []);
         });
     }
@@ -96,14 +99,15 @@ class FirewallManager extends AbstractManager
             'remove_from' => [
                 [
                     'type' => 'server',
-                    'server' => ['id' => (int) $serverId]
-                ]
-            ]
+                    'server' => ['id' => (int) $serverId],
+                ],
+            ],
         ];
         $response = $this->postRequest("firewalls/{$firewallId}/actions/remove_from_resources", $params);
 
         return $this->hydrate($response, function (array $data) {
             $actions = $data['actions'] ?? [];
+
             return Action::fromArray($actions[0] ?? []);
         });
     }
@@ -115,6 +119,7 @@ class FirewallManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $actions = $data['actions'] ?? [];
+
             return Action::fromArray($actions[0] ?? []);
         });
     }

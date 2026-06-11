@@ -16,13 +16,14 @@ class HetznerCloudServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/hetzner-cloud.php',
+            __DIR__.'/../../config/hetzner-cloud.php',
             'hetzner-cloud'
         );
 
         // Bind HetznerClient
         $this->app->singleton(HetznerClient::class, function ($app) {
             $config = $app['config']->get('hetzner-cloud', []);
+
             return new HetznerClient($config['token'] ?? '', $config);
         });
 
@@ -44,7 +45,7 @@ class HetznerCloudServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../../config/hetzner-cloud.php' => config_path('hetzner-cloud.php'),
+                __DIR__.'/../../config/hetzner-cloud.php' => config_path('hetzner-cloud.php'),
             ], 'config');
         }
     }

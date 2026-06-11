@@ -16,6 +16,7 @@ class FloatingIpManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $ips = array_map(fn (array $item) => FloatingIp::fromArray($item), $data['floating_ips'] ?? []);
+
             return new FloatingIpCollection($ips);
         });
     }
@@ -33,6 +34,7 @@ class FloatingIpManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $ips = array_map(fn (array $item) => FloatingIp::fromArray($item), $data['floating_ips'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new FloatingIpCollection($ips), $meta);
         });
     }
@@ -72,6 +74,7 @@ class FloatingIpManager extends AbstractManager
     public function assign($ipId, $serverId)
     {
         $params = ['server' => (int) $serverId];
+
         return $this->postAction((int) $ipId, 'assign', $params);
     }
 

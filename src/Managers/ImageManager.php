@@ -16,6 +16,7 @@ class ImageManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $images = array_map(fn (array $item) => Image::fromArray($item), $data['images'] ?? []);
+
             return new ImageCollection($images);
         });
     }
@@ -33,6 +34,7 @@ class ImageManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $images = array_map(fn (array $item) => Image::fromArray($item), $data['images'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new ImageCollection($images), $meta);
         });
     }

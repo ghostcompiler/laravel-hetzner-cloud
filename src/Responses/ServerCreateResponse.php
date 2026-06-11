@@ -8,8 +8,11 @@ use Vendor\HetznerCloud\DTOs\Server;
 class ServerCreateResponse
 {
     public Server $server;
+
     public ?Action $action = null;
+
     public ?string $rootPassword = null;
+
     public array $nextActions = [];
 
     public function __construct(Server $server, ?Action $action = null, ?string $rootPassword = null, array $nextActions = [])
@@ -22,9 +25,6 @@ class ServerCreateResponse
 
     /**
      * Create response wrapper from raw API data.
-     *
-     * @param array $data
-     * @return self
      */
     public static function fromArray(array $data): self
     {

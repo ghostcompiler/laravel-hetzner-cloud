@@ -15,6 +15,7 @@ class ActionManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $actions = array_map(fn (array $item) => Action::fromArray($item), $data['actions'] ?? []);
+
             return new ActionCollection($actions);
         });
     }
@@ -32,6 +33,7 @@ class ActionManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $actions = array_map(fn (array $item) => Action::fromArray($item), $data['actions'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new ActionCollection($actions), $meta);
         });
     }

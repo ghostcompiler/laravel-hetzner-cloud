@@ -17,6 +17,7 @@ class VolumeManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $volumes = array_map(fn (array $item) => Volume::fromArray($item), $data['volumes'] ?? []);
+
             return new VolumeCollection($volumes);
         });
     }
@@ -34,6 +35,7 @@ class VolumeManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $volumes = array_map(fn (array $item) => Volume::fromArray($item), $data['volumes'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new VolumeCollection($volumes), $meta);
         });
     }
@@ -73,6 +75,7 @@ class VolumeManager extends AbstractManager
     public function attach($volumeId, $serverId, array $params = [])
     {
         $params['server'] = (int) $serverId;
+
         return $this->postAction((int) $volumeId, 'attach', $params);
     }
 

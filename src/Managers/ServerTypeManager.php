@@ -13,6 +13,7 @@ class ServerTypeManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $types = array_map(fn (array $item) => ServerType::fromArray($item), $data['server_types'] ?? []);
+
             return new ServerTypeCollection($types);
         });
     }

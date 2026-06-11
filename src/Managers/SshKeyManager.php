@@ -15,6 +15,7 @@ class SshKeyManager extends AbstractManager
 
         return $this->hydrate($response, function (array $data) {
             $keys = array_map(fn (array $item) => SshKey::fromArray($item), $data['ssh_keys'] ?? []);
+
             return new SshKeyCollection($keys);
         });
     }
@@ -32,6 +33,7 @@ class SshKeyManager extends AbstractManager
         return $this->hydrate($response, function (array $data) {
             $keys = array_map(fn (array $item) => SshKey::fromArray($item), $data['ssh_keys'] ?? []);
             $meta = PaginationMeta::fromArray($data['meta']['pagination'] ?? []);
+
             return new PaginatedResponse(new SshKeyCollection($keys), $meta);
         });
     }

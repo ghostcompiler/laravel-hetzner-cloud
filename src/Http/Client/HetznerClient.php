@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Vendor\HetznerCloud\Exceptions\ApiException;
@@ -24,17 +25,27 @@ use Vendor\HetznerCloud\Http\Middleware\RetryMiddleware;
 class HetznerClient
 {
     private string $token;
+
     private string $baseUrl;
+
     private int $timeout;
+
     private int $maxRetries;
+
     private int $retryBackoff;
+
     private bool $loggingEnabled;
+
     private ?string $loggingChannel;
 
     private ?GuzzleClient $guzzleClient = null;
+
     private array $requestHooks = [];
+
     private array $responseHooks = [];
+
     private bool $async = false;
+
     private ?array $batchQueue = null;
 
     private array $lastRateLimit = [
@@ -57,6 +68,7 @@ class HetznerClient
     public function setGuzzleClient(GuzzleClient $client): self
     {
         $this->guzzleClient = $client;
+
         return $this;
     }
 
@@ -64,6 +76,7 @@ class HetznerClient
     {
         $this->token = $token;
         $this->guzzleClient = null; // Rebuild client
+
         return $this;
     }
 
@@ -75,6 +88,7 @@ class HetznerClient
     public function setAsync(bool $async): self
     {
         $this->async = $async;
+
         return $this;
     }
 
@@ -90,6 +104,7 @@ class HetznerClient
     {
         $queue = $this->batchQueue;
         $this->batchQueue = null;
+
         return $queue;
     }
 
@@ -101,12 +116,14 @@ class HetznerClient
     public function addRequestHook(callable $hook): self
     {
         $this->requestHooks[] = $hook;
+
         return $this;
     }
 
     public function addResponseHook(callable $hook): self
     {
         $this->responseHooks[] = $hook;
+
         return $this;
     }
 
@@ -118,10 +135,8 @@ class HetznerClient
     /**
      * Send HTTP Request.
      *
-     * @param string $method
-     * @param string $uri
-     * @param array $options
      * @return mixed Response array, DTO, or PromiseInterface
+     *
      * @throws HetznerException
      */
     public function request(string $method, string $uri, array $options = [])
@@ -133,12 +148,14 @@ class HetznerClient
             }
             // Reset async mode
             $this->async = false;
+
             return $promise;
         }
 
         try {
             $response = $this->getGuzzleClient()->request($method, $uri, $options);
             $this->updateRateLimit($response);
+
             return $this->decodeResponse($response);
         } catch (\Throwable $e) {
             throw $this->mapException($e);
@@ -147,11 +164,6 @@ class HetznerClient
 
     /**
      * Send HTTP Request asynchronously.
-     *
-     * @param string $method
-     * @param string $uri
-     * @param array $options
-     * @return PromiseInterface
      */
     public function requestAsync(string $method, string $uri, array $options = []): PromiseInterface
     {
@@ -160,6 +172,7 @@ class HetznerClient
         return $promise->then(
             function (ResponseInterface $response) {
                 $this->updateRateLimit($response);
+
                 return $this->decodeResponse($response);
             },
             function (\Throwable $reason) {
@@ -191,6 +204,7 @@ class HetznerClient
                 foreach ($this->requestHooks as $hook) {
                     $request = $hook($request) ?: $request;
                 }
+
                 return $handler($request, $options);
             };
         });
@@ -202,6 +216,7 @@ class HetznerClient
                     foreach ($this->responseHooks as $hook) {
                         $response = $hook($response) ?: $response;
                     }
+
                     return $response;
                 });
             };
@@ -212,9 +227,11 @@ class HetznerClient
             $stack->push(function (callable $handler) {
                 return function (RequestInterface $request, array $options) use ($handler) {
                     $this->logRequest($request);
+
                     return $handler($request, $options)->then(
                         function (ResponseInterface $response) {
                             $this->logResponse($response);
+
                             return $response;
                         },
                         function (\Throwable $reason) {
@@ -232,11 +249,11 @@ class HetznerClient
         ];
 
         if ($this->token !== '') {
-            $headers['Authorization'] = 'Bearer ' . $this->token;
+            $headers['Authorization'] = 'Bearer '.$this->token;
         }
 
         return new GuzzleClient([
-            'base_uri' => rtrim($this->baseUrl, '/') . '/',
+            'base_uri' => rtrim($this->baseUrl, '/').'/',
             'headers' => $headers,
             'timeout' => $this->timeout,
             'handler' => $stack,
@@ -262,9 +279,6 @@ class HetznerClient
 
     /**
      * Decode JSON response body.
-     *
-     * @param ResponseInterface $response
-     * @return array
      */
     private function decodeResponse(ResponseInterface $response): array
     {
@@ -274,14 +288,12 @@ class HetznerClient
         }
 
         $decoded = json_decode($body, true);
+
         return is_array($decoded) ? $decoded : [];
     }
 
     /**
      * Map Guzzle Exceptions to Hetzner Custom Exceptions.
-     *
-     * @param \Throwable $e
-     * @return HetznerException
      */
     public function mapException(\Throwable $e): HetznerException
     {
@@ -290,7 +302,7 @@ class HetznerClient
         }
 
         if ($e instanceof ConnectException) {
-            return new NetworkException('Connection error: ' . $e->getMessage(), 0, $e);
+            return new NetworkException('Connection error: '.$e->getMessage(), 0, $e);
         }
 
         if ($e instanceof RequestException && $e->getResponse() !== null) {
@@ -331,11 +343,12 @@ class HetznerClient
                     if ($status >= 500 && $status <= 599) {
                         return new ServerException($message, $status, $errorCode, $details, $e);
                     }
+
                     return new ApiException($message, $status, $errorCode, $details, $e);
             }
         }
 
-        return new HetznerException('An unexpected error occurred: ' . $e->getMessage(), 0, $e);
+        return new HetznerException('An unexpected error occurred: '.$e->getMessage(), 0, $e);
     }
 
     private function logRequest(RequestInterface $request): void
@@ -377,11 +390,11 @@ class HetznerClient
 
     private function log(string $level, string $message, array $context = []): void
     {
-        if (class_exists(\Illuminate\Support\Facades\Log::class)) {
+        if (class_exists(Log::class)) {
             if ($this->loggingChannel) {
-                \Illuminate\Support\Facades\Log::channel($this->loggingChannel)->$level($message, $context);
+                Log::channel($this->loggingChannel)->$level($message, $context);
             } else {
-                \Illuminate\Support\Facades\Log::$level($message, $context);
+                Log::$level($message, $context);
             }
         }
     }
