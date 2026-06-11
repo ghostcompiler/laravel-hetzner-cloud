@@ -49,9 +49,11 @@ jobs:
           - laravel: '12.*'
             php: '8.1'
 
-          # Laravel 13 constraints (PHP 8.2+)
+          # Laravel 13 constraints (PHP 8.3+)
           - laravel: '13.*'
             php: '8.1'
+          - laravel: '13.*'
+            php: '8.2'
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 

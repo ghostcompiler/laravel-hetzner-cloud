@@ -1,18 +1,17 @@
 <p align="center">
-  <img src="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780666791/logo_mqnqn4.png" alt="Cloudflare Pro" width="180">
+  <img src="https://res.cloudinary.com/djgvfl1tv/image/upload/v1780666791/logo_mqnqn4.png" alt="Laravel Hetzner Cloud" width="180">
 </p>
 
-<h1 align="center">Cloudflare Pro for Plesk</h1>
+<h1 align="center">Laravel Hetzner Cloud SDK</h1>
 
 <p align="center">
-  Sync Plesk DNS records with Cloudflare using token-scoped access, per-user settings, API logs, and background sync jobs.
+  A premium, feature-rich PHP SDK and Laravel integration for the Hetzner Cloud API, featuring rate-limit handling, automatic retries, and concurrent batch operations.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Plesk-Extension-52BBE6?style=for-the-badge&logo=plesk&logoColor=white" alt="Plesk Extension">
-  <img src="https://img.shields.io/badge/Cloudflare-DNS%20Sync-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Cloudflare DNS Sync">
-  <img src="https://img.shields.io/badge/React-JSX-61DAFB?style=for-the-badge&logo=react&logoColor=000000" alt="React JSX">
-  <img src="https://img.shields.io/badge/PHP-Backend-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP Backend">
+  <img src="https://img.shields.io/badge/Laravel-10%20%7C%2011%20%7C%2012%20%7C%2013-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel">
+  <img src="https://img.shields.io/badge/PHP-8.1%20to%208.5-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Hetzner--Cloud-API-D85012?style=for-the-badge" alt="Hetzner Cloud API">
   <img src="https://img.shields.io/badge/Built%20By-Ghost%20Compiler-0F172A?style=for-the-badge" alt="Ghost Compiler">
 </p>
 
