@@ -49,7 +49,11 @@
             "composer/package-versions-deprecated": true
         },
         "audit": {
-            "block-insecure": false
+            "block-insecure": false,
+            "ignore": {
+                "CVE-2026-48019": "Laravel CRLF injection in default email rule affects dev dependencies and is not used by this package.",
+                "GHSA-5vg9-5847-vvmq": "Laravel CRLF injection in default email rule affects dev dependencies and is not used by this package."
+            }
         }
     }
 }
