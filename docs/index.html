@@ -94,6 +94,9 @@
           <input type="password" id="apiTokenInput" class="input-field" placeholder="Enter API Token...">
           <button type="button" class="run-btn" id="saveTokenBtn" style="height: 38px; align-self: auto; border-radius: 8px;">Save</button>
         </div>
+        <div class="token-helper-text">
+          <a href="https://console.hetzner.cloud/" target="_blank" rel="noopener">Generate Token in Hetzner Console ↗</a>
+        </div>
         <div class="limits-mini-grid">
           <div class="limit-cell"><span>Limit</span><strong id="globalLimitVal">-</strong></div>
           <div class="limit-cell"><span>Rem.</span><strong id="globalRemainingVal">-</strong></div>
@@ -166,7 +169,7 @@
 
       <section id="configuration" data-title="Configuration">
         <h2>Configuration</h2>
-        <p>The published configuration file lives at <code>config/hetzner-cloud.php</code>.</p>
+        <p>The published configuration file lives at <code>config/hetzner-cloud.php</code>. You can generate your API Token from the <a href="https://console.hetzner.cloud/" target="_blank" rel="noopener">Hetzner Cloud Console</a> under project Security settings.</p>
         <pre><code>return [
     'token' => env('HETZNER_CLOUD_TOKEN'),
     'base_url' => env('HETZNER_CLOUD_BASE_URL', 'https://api.hetzner.cloud/v1'),

@@ -736,6 +736,22 @@ pre code {
   flex: 1;
 }
 
+.token-helper-text {
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.token-helper-text a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.token-helper-text a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 /* Rate Limits Mini-Grid */
 .limits-mini-grid {
   display: grid;
